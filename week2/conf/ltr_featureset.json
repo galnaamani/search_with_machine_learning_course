@@ -26,38 +26,23 @@
         }
       },
       {
-        "name": "name_hyphens_min_df",
-        "params": [
-          "keywords"
-        ],
-        "template_language": "mustache",
-        "template": {
-          "match_explorer": {
-            "type": "min_raw_df",
-            "query": {
-              "match": {
-                "name.hyphens": "{{keywords}}"
-              }
-            }
-          }
-        }
-      },
-      {
         "name": "salePrice",
         "template_language": "mustache",
         "template": {
           "function_score": {
-            "functions": [
-              {
-                "field_value_factor": {
-                  "field": "salePrice",
-                  "missing": 0
-                }
-              }
-            ],
             "query": {
               "match_all": {}
-            }
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['salePrice'].size()!=0) {return Math.log(doc['salePrice'].value + 1);} else {return 10}"
+                  }
+                }
+              }
+            ]
           }
         }
       },
@@ -66,17 +51,153 @@
         "template_language": "mustache",
         "template": {
           "function_score": {
+            "query": {
+              "match_all": {}
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['regularPrice'].size()!=0) {return Math.log(doc['regularPrice'].value + 1);} else {return 10}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "customerReviewAverage",
+        "template_language": "mustache",
+        "template": {
+          "function_score": {
             "functions": [
               {
                 "field_value_factor": {
-                  "field": "regularPrice",
-                  "missing": 0
+                  "field": "customerReviewAverage",
+                  "missing": 100
                 }
               }
             ],
             "query": {
               "match_all": {}
             }
+          }
+        }
+      },
+      {
+        "name": "customerReviewCount",
+        "template_language": "mustache",
+        "template": {
+          "function_score": {
+            "query": {
+              "match_all": {}
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['customerReviewCount'].size()!=0) {return Math.log(doc['customerReviewCount'].value + 1);} else {return 0}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "salesRankLongTerm",
+        "template_language": "mustache",
+        "template": {
+          "function_score": {
+            "query": {
+              "match_all": {}
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['salesRankLongTerm'].size()!=0) {return Math.log(doc['salesRankLongTerm'].value + 1);} else {return 10}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "salesRankMediumTerm",
+        "template_language": "mustache",
+        "template": {
+          "function_score": {
+            "query": {
+              "match_all": {}
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['salesRankMediumTerm'].size()!=0) {return Math.log(doc['salesRankMediumTerm'].value + 1);} else {return 10}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "salesRankShortTerm",
+        "template_language": "mustache",
+        "template": {
+          "function_score": {
+            "query": {
+              "match_all": {}
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['salesRankShortTerm'].size()!=0) {return Math.log(doc['salesRankShortTerm'].value + 1);} else {return 10}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "bestSellingRank",
+        "template_language": "mustache",
+        "template": {
+          "function_score": {
+            "query": {
+              "match_all": {}
+            },
+            "boost_mode": "replace",
+            "functions": [
+              {"script_score" : 
+                {
+                  "script" : {
+                    "source": "if (doc['bestSellingRank'].size()!=0) {return Math.log(doc['bestSellingRank'].value + 1);} else {return 10}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "click_prior",
+        "template_language": "mustache",
+        "template": {
+          "query_string": {
+            "query": "{{click_prior_query}}",
+            "fields": ["_id"]
           }
         }
       }
