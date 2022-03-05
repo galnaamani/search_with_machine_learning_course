@@ -39,3 +39,4 @@ with open(output_file, 'w') as output:
                         comment = line[13:len(line) - 11]
                     elif '</review>'in line:
                       output.write("__label__%s %s\n" % (rating, transform_training_data(title, comment)))
+

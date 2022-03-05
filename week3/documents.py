@@ -25,6 +25,11 @@ def annotate():
             if the_text is not None and the_text.find("%{") == -1:
                 if item == "name":
                     if syns_model is not None:
-                        print("IMPLEMENT ME: call nearest_neighbors on your syn model and return it as `name_synonyms`")
+                        response['name_synonyms'] = []
+                        fasttext_model = fasttext.load_model(syns_model)
+                        for w in the_text.split():
+                            nn = fasttext_model.get_nearest_neighbors(the_text)[0]
+                            if nn[0] > 0.9:
+                                response['name_synonyms'].append(nn)
         return jsonify(response)
     abort(415)
