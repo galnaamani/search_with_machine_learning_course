@@ -5,6 +5,7 @@ import argparse
 from pathlib import Path
 from nltk.stem import SnowballStemmer
 import string
+import re
 
 STEMMER = SnowballStemmer("english")
 
@@ -32,6 +33,7 @@ sample_rate = args.sample_rate
 def transform_training_data(name):
     name = name.lower()
     name = ''.join([' ' if word in string.punctuation else word for word in name]) # punctuation to spaces
+    name = re.sub(r"\d+", "", name) # remove numbers
     name = ' '.join([STEMMER.stem(word) for word in name.split()]) # remove multiple spaces and stem
     return name
 

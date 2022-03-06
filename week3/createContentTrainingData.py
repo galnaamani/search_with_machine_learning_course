@@ -11,6 +11,7 @@ STEMMER = SnowballStemmer("english")
 def transform_name(product_name):
     product_name = product_name.lower()
     product_name = ''.join([' ' if word in string.punctuation else word for word in product_name]) # punctuation to spaces
+    product_name = re.sub(r"\d+", "", product_name) # remove numbers
     product_name = ' '.join([STEMMER.stem(word) for word in product_name.split()]) # remove multiple spaces and stem
     return product_name
 
