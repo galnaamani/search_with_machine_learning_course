@@ -19,7 +19,8 @@ import pandas as pd
 import search_utils as su
 import xgb_utils as xgbu
 from opensearchpy import OpenSearch
-
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 
@@ -341,7 +342,6 @@ if __name__ == "__main__":
     #############
     if args.xgb:
         # Defaults
-
         bst, xgb_params = xgbu.train(args.xgb, args.xgb_rounds, args.xgb_conf)
         print("Dumping out model using feature map: %s" % args.xgb_feat_map)
         model = bst.get_dump(fmap=("%s/%s" % (output_dir, args.xgb_feat_map)), dump_format='json')
